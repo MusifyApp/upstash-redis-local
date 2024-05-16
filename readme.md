@@ -1,4 +1,5 @@
 
+[![Create and publish a Docker image](https://github.com/MusifyApp/upstash-redis-local/actions/workflows/publish.yml/badge.svg)](https://github.com/MusifyApp/upstash-redis-local/actions/workflows/publish.yml)
 
 ![release](https://img.shields.io/github/v/release/DarthBenro008/upstash-redis-local)
 [![GitHub License](https://img.shields.io/github/license/DarthBenro008/upstash-redis-local)](https://github.com/DarthBenro008/upstash-redis-local/blob/master/LICENSE)
