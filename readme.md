@@ -31,12 +31,12 @@ USAGE:
         upstash-redis-local --token upstash --addr :8000 --redis :6379
 
 ARGUMENTS:
-	--token		TOKEN		The API token to accept as authorised (default: upstash)
-	--addr		ADDR		Address for the server to listen on (default: :8000)
-	--redis		ADDR		Address to your redids server (default: :6379)
+	--token			TOKEN		The API token to accept as authorised (default: upstash)
+	--addr			ADDR		Address for the server to listen on (default: :8000)
+	--redis			ADDR		Address to your redids server (default: :6379)
 	--redispassword PASSWORD	Password for your redis server (default: "")
-	--redisusername USERNAME	Username for your redis server (default: "")
-	--help		Prints this message
+	--redisusername USERNAME	Username for your redis server (default: "default")
+	--help						Prints this message
 
 ```
 
@@ -45,7 +45,9 @@ ARGUMENTS:
 1. **`--token <STRING>`**: The API token to accept as authorised (default: upstash)
 2. **`--addr <ADDR>`**:Address for the server to listen on (default: :8000)
 3. **`--redis <ADDR>`**: Address to your redis server (default: :6379)
-4. **`--help`**: Prints a help message
+4. **`--redispassword <PASSWORD>`**: Password for your redis server (default: "")
+5. **`--redisusername <USERNAME>`**: Username for your redis server (default: default)
+6. **`--help`**: Prints a help message
 
 
 ## ⬇ Installation

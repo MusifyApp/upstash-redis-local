@@ -38,7 +38,7 @@ func (c *Cmd) Validate() error {
 func main() {
 	setupFlags(flag.CommandLine)
 	redisAddr := flag.String("redis", ":6379", "Local Redis String")
-	redisUser := flag.String("redisusername", "", "Username for your redis server")
+	redisUser := flag.String("redisusername", "default", "Username for your redis server")
 	redisPass := flag.String("redispassword", "", "Password for your redis server")
 	addr := flag.String("addr", ":8000", "Local webserver string")
 	apiToken := flag.String("token", "upstash", "API token set by user")
