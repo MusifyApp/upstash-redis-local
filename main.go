@@ -18,6 +18,8 @@ type Cmd struct {
 	RedisAddr string
 	Addr      string
 	ApiToken  string
+	RedisUser string
+	RedisPass string
 }
 
 func (c *Cmd) Validate() error {
@@ -36,12 +38,16 @@ func (c *Cmd) Validate() error {
 func main() {
 	setupFlags(flag.CommandLine)
 	redisAddr := flag.String("redis", ":6379", "Local Redis String")
+	redisUser := flag.String("redisusername", "", "Username for your redis server")
+	redisPass := flag.String("redispassword", "", "Password for your redis server")
 	addr := flag.String("addr", ":8000", "Local webserver string")
 	apiToken := flag.String("token", "upstash", "API token set by user")
 	help := flag.Bool("help", false, "")
 	flag.Parse()
 	cmd := Cmd{
 		RedisAddr: *redisAddr,
+		RedisUser: *redisUser,
+		RedisPass: *redisPass,
 		ApiToken:  *apiToken,
 		Addr:      *addr,
 	}
@@ -60,7 +66,7 @@ func main() {
 		log.Fatalf("err: %v", err)
 	}
 	defer logger.Sync()
-	server := internal.Server{Address: cmd.Addr, APIToken: cmd.ApiToken, RedisConn: connectToRedis(cmd.RedisAddr), Logger: logger}
+	server := internal.Server{Address: cmd.Addr, APIToken: cmd.ApiToken, RedisConn: connectToRedis(cmd.RedisAddr, cmd.RedisUser, cmd.RedisPass), Logger: logger}
 	defer server.Serve()
 }
 
@@ -85,15 +91,19 @@ USAGE:
 	upstash-redis-local --token upstash --addr :8000 --redis :6379
 
 ARGUMENTS:
-	--token	TOKEN	The API token to accept as authorised (default: upstash)
-	--addr	ADDR	Address for the server to listen on (default: :8000)
-	--redis	ADDR	Address to your redids server (default: :6379)
+	--token			TOKEN		The API token to accept as authorised (default: upstash)
+	--addr			ADDR		Address for the server to listen on (default: :8000)
+	--redis			ADDR		Address to your redids server (default: :6379)
+	--redispassword PASSWORD	Password for your redis server (default: "")
+	--redisusername USERNAME	Username for your redis server (default: "")
 	--help		Prints this message
 `, Version)
 }
 
-func connectToRedis(addr string) redis.Conn {
-	conn, err := redis.Dial("tcp", addr)
+func connectToRedis(addr string, username string, password string) redis.Conn {
+	conn, err := redis.Dial("tcp", addr,
+	redis.DialUsername(username),
+	redis.DialPassword(password))
 	if err != nil {
 		log.Fatalf("err: %v", err)
 	}
