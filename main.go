@@ -66,7 +66,7 @@ func main() {
 		log.Fatalf("err: %v", err)
 	}
 	defer logger.Sync()
-	server := internal.Server{Address: cmd.Addr, APIToken: cmd.ApiToken, RedisConn: connectToRedis(cmd.RedisAddr, cmd.RedisUser, cmd.RedisPass), Logger: logger}
+	server := internal.Server{Address: cmd.Addr, APIToken: cmd.ApiToken, RedisPool: newPool(cmd.RedisAddr, cmd.RedisUser, cmd.RedisPass), Logger: logger}
 	defer server.Serve()
 }
 
@@ -108,4 +108,24 @@ func connectToRedis(addr string, username string, password string) redis.Conn {
 		log.Fatalf("err: %v", err)
 	}
 	return conn
+}
+
+func newPool(addr string, username string, password string) *redis.Pool {
+    return &redis.Pool{
+        MaxIdle:     3,
+        IdleTimeout: 240 * time.Second,
+        Dial: func() (redis.Conn, error) {
+            c, err := redis.Dial("tcp", addr,
+                redis.DialUsername(username),
+                redis.DialPassword(password))
+            if err != nil {
+                return nil, err
+            }
+            return c, err
+        },
+        TestOnBorrow: func(c redis.Conn, t time.Time) error {
+            _, err := c.Do("PING")
+            return err
+        },
+    }
 }

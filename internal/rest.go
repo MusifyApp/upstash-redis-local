@@ -18,7 +18,7 @@ import (
 type Server struct {
 	Address     string
 	APIToken    string
-	RedisConn   redis.Conn
+	RedisPool   *redis.Pool
 	credentials map[string]credentials
 	mutex       sync.Mutex
 	Logger      *zap.Logger
@@ -143,7 +143,9 @@ func (s *Server) executeCommand(commandName string, args ...interface{}) (interf
 	if strings.ToLower(commandName) == "acl" && len(args) > 0 && strings.ToLower(fmt.Sprint(args[0])) == "resttoken" {
 		return s.aclRestToken(commandName, args...)
 	}
-	res, err := s.RedisConn.Do(commandName, args...)
+	conn := s.RedisPool.Get()
+	defer conn.Close()
+	res, err := conn.Do(commandName, args...)
 	if err != nil {
 		return errorResult{Error: err.Error()}, fasthttp.StatusBadRequest
 	}
