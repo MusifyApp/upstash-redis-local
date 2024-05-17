@@ -6,12 +6,13 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/gomodule/redigo/redis"
-	"github.com/valyala/fasthttp"
-	"go.uber.org/zap"
 	"log"
 	"strings"
 	"sync"
+
+	"github.com/gomodule/redigo/redis"
+	"github.com/valyala/fasthttp"
+	"go.uber.org/zap"
 )
 
 // Server Configurations
@@ -48,7 +49,7 @@ func (s *Server) Serve() {
 
 // Handle requests for each query
 func (s *Server) requestHandler(ctx *fasthttp.RequestCtx) {
-	s.Logger.Info("Incoming Request with data:", zap.String("body:", string(ctx.PostBody())))
+	s.Logger.Info("Incoming Request with data:", zap.String("body:", string(ctx.PostBody())), zap.String("path:", string(ctx.Path())))
 	if !ctx.IsGet() && !ctx.IsPost() && !ctx.IsHead() && !ctx.IsPut() {
 		s.Logger.Warn("Invalid Method Request")
 		s.respond(ctx, nil, fasthttp.StatusMethodNotAllowed)
@@ -65,7 +66,7 @@ func (s *Server) requestHandler(ctx *fasthttp.RequestCtx) {
 	case "":
 		s.handleSingleExecute(ctx)
 		return
-	case "/pipeline":
+	case "pipeline":
 		s.handlePipelineExecute(ctx)
 		return
 	default:
