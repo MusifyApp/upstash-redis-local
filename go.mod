@@ -1,6 +1,6 @@
 module upstash-redis-local
 
-go 1.19
+go 1.24
 
 require (
 	github.com/gomodule/redigo v1.8.9
@@ -10,7 +10,7 @@ require (
 
 require (
 	github.com/andybalholm/brotli v1.0.6 // indirect
-	github.com/klauspost/compress v1.17.3 // indirect
+	github.com/klauspost/compress v1.18.7 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
 )
